@@ -89,7 +89,7 @@ class AiliaTokenizer(
     }
 
     private external fun create(tokenizerType: Int, flags: Int): Long
-    private external fun destroy(tokenizer: Long): Void
+    private external fun destroy(tokenizer: Long)
     private external fun openModelFile(tokenizer: Long, path: String): Int
     private external fun openVocabFile(tokenizer: Long, path: String): Int
     private external fun openMergeFile(tokenizer: Long, path: String): Int
