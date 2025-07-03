@@ -1,4 +1,4 @@
-package axip.ailia
+package axip.ailia_tokenizer
 
 import android.util.Log
 
