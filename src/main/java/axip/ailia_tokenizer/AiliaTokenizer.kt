@@ -16,6 +16,10 @@ class AiliaTokenizer(
         const val AILIA_TOKENIZER_TYPE_BERT_JAPANESE_CHARACTER = 5;
         const val AILIA_TOKENIZER_TYPE_T5 = 6;
         const val AILIA_TOKENIZER_TYPE_ROBERTA = 7;
+        const val AILIA_TOKENIZER_TYPE_BERT = 8;
+        const val AILIA_TOKENIZER_TYPE_GPT2 = 9;
+        const val AILIA_TOKENIZER_TYPE_LLAMA = 10;
+        const val AILIA_TOKENIZER_TYPE_GEMMA = 11;
 
         init {
             System.loadLibrary("ailia_tokenizer")
