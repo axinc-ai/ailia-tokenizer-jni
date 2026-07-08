@@ -2,23 +2,51 @@ package axip.ailia_tokenizer
 
 import android.util.Log
 
+/**
+ * Tokenizer for natural language processing models.
+ *
+ * This class provides text tokenization (encoding to token IDs) and
+ * vocabulary lookup via the ailia Tokenizer native library.
+ *
+ * @constructor Creates a tokenizer instance of the given type.
+ * @param tokenizerType Type of the tokenizer, one of the AILIA_TOKENIZER_TYPE_* constants.
+ */
 class AiliaTokenizer(
     tokenizerType: Int = AILIA_TOKENIZER_TYPE_XLM_ROBERTA,
 ) {
+    /**
+     * Constants of the tokenizer.
+     *
+     * AILIA_TOKENIZER_TYPE_* defines the tokenizer type passed to the constructor,
+     * and AILIA_TOKENIZER_FLAG_* defines the tokenizer option.
+     */
     companion object {
+        /** Default flag (no option). */
         const val AILIA_TOKENIZER_FLAG_NONE = 0
 
+        /** Tokenizer for Whisper models. */
         const val AILIA_TOKENIZER_TYPE_WHISPER = 0;
+        /** Tokenizer for CLIP models. */
         const val AILIA_TOKENIZER_TYPE_CLIP = 1;
+        /** Tokenizer for XLM-RoBERTa models. Requires a SentencePiece model file. */
         const val AILIA_TOKENIZER_TYPE_XLM_ROBERTA = 2;
+        /** Tokenizer for Marian machine translation models. Requires a SentencePiece model file. */
         const val AILIA_TOKENIZER_TYPE_MARIAN = 3;
+        /** WordPiece tokenizer for Japanese BERT models. Requires a MeCab dictionary and a vocabulary file. */
         const val AILIA_TOKENIZER_TYPE_BERT_JAPANESE_WORDPIECE = 4;
+        /** Character tokenizer for Japanese BERT models. Requires a MeCab dictionary and a vocabulary file. */
         const val AILIA_TOKENIZER_TYPE_BERT_JAPANESE_CHARACTER = 5;
+        /** Tokenizer for T5 models. Requires a SentencePiece model file. */
         const val AILIA_TOKENIZER_TYPE_T5 = 6;
+        /** Tokenizer for RoBERTa models. Requires a vocabulary file and a merge file. */
         const val AILIA_TOKENIZER_TYPE_ROBERTA = 7;
+        /** Tokenizer for BERT models. Requires a vocabulary file. */
         const val AILIA_TOKENIZER_TYPE_BERT = 8;
+        /** Tokenizer for GPT-2 models. Requires a vocabulary file and a merge file. */
         const val AILIA_TOKENIZER_TYPE_GPT2 = 9;
+        /** Tokenizer for Llama models. Requires a SentencePiece model file. */
         const val AILIA_TOKENIZER_TYPE_LLAMA = 10;
+        /** Tokenizer for Gemma models. Requires a SentencePiece model file. */
         const val AILIA_TOKENIZER_TYPE_GEMMA = 11;
 
         init {
@@ -33,6 +61,17 @@ class AiliaTokenizer(
         tokenizer = create(tokenizerType, AILIA_TOKENIZER_FLAG_NONE)
     }
 
+    /**
+     * Loads the resource files required by the tokenizer.
+     *
+     * The required files depend on the tokenizer type. See the description of
+     * each AILIA_TOKENIZER_TYPE_* constant.
+     *
+     * @param modelPath Path to the SentencePiece model file (spm file), or null if not required.
+     * @param vocabPath Path to the vocabulary file, or null if not required.
+     * @param mergePath Path to the merge file, or null if not required.
+     * @param dictionaryPath Path to the MeCab dictionary directory, or null if not required.
+     */
     fun loadFiles(modelPath: String? = null, vocabPath: String? = null, mergePath: String? = null,
                   dictionaryPath: String? = null) {
         modelPath?.let {
@@ -64,6 +103,12 @@ class AiliaTokenizer(
         }
     }
 
+    /**
+     * Encodes a text into token IDs.
+     *
+     * @param text Text to tokenize (UTF-8).
+     * @return Array of token IDs.
+     */
     fun encode(text: String): IntArray {
         // First encode the text
         val encodeResult = encode(tokenizer, text)
@@ -84,10 +129,21 @@ class AiliaTokenizer(
         return tokens
     }
 
+    /**
+     * Returns the vocabulary word corresponding to a token ID.
+     *
+     * @param token Token ID.
+     * @return Word associated with the token (UTF-8).
+     */
     fun getWord(token: Int): String {
         return getVocab(tokenizer, token)
     }
 
+    /**
+     * Releases the native resources held by the tokenizer.
+     *
+     * The instance must not be used after calling this method.
+     */
     fun close() {
         destroy(tokenizer)
     }
